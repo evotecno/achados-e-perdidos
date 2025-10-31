@@ -1,1 +1,28 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #e6edf5;
+  margin: 0;
+  padding: 0;
+  color: #1a1a1a;
+}
 
+header {
+  background-color: #0d1b2a;
+  color: white;
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+header .logo {
+  width: 80px;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+main {
+  padding: 1rem;
+}
+
+section {
+  background: white;
+  border-radius: 16px
