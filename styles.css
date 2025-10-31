@@ -89,3 +89,18 @@ footer {
   color: white;
   font-size: 0.9rem;
 }
+.delete-btn {
+  background-color: #b00020;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  transition: 0.3s;
+}
+
+.delete-btn:hover {
+  background-color: #e63946;
+}
