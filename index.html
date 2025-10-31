@@ -1,1 +1,52 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EVO Achados e Perdidos</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <img src="https://i.imgur.com/tG1kYDb.png" alt="Logo EVO" class="logo">
+    <h1>Achados e Perdidos EVO</h1>
+    <p>Evolua sua tecnologia. Impulsione seu negócio.</p>
+  </header>
+
+  <main>
+    <section id="form-section">
+      <h2>Registrar item</h2>
+      <form id="itemForm">
+        <label>Nome do item:</label>
+        <input type="text" id="itemName" placeholder="Ex: Chaves, garrafa..." required />
+
+        <label>Descrição:</label>
+        <textarea id="itemDescription" placeholder="Detalhes do item..." required></textarea>
+
+        <label>Local encontrado/perdido:</label>
+        <input type="text" id="itemLocation" placeholder="Ex: Sala 3, recepção..." required />
+
+        <label>Data:</label>
+        <input type="date" id="itemDate" required />
+
+        <label>Foto do item:</label>
+        <input type="file" id="itemImage" accept="image/*" required />
+
+        <button type="submit">Adicionar ao mural</button>
+      </form>
+    </section>
+
+    <section id="gallery-section">
+      <h2>Mural de Itens</h2>
+      <div id="itemsGallery"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 EVO Tecnologia — Todos os direitos reservados.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
