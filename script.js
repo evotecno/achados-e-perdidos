@@ -5,7 +5,7 @@ const gallery = document.getElementById('itemsGallery');
 document.addEventListener('DOMContentLoaded', () => {
   const items = JSON.parse(localStorage.getItem('achadosEvo')) || [];
   gallery.innerHTML = '';
-  items.forEach(addItemToGallery);
+  items.forEach((item, index) => addItemToGallery(item, index));
 });
 
 form.addEventListener('submit', (e) => {
@@ -26,20 +26,19 @@ form.addEventListener('submit', (e) => {
   const reader = new FileReader();
   reader.onload = () => {
     const imageUrl = reader.result;
-
     const newItem = { name, description, location, date, imageUrl };
+
     const items = JSON.parse(localStorage.getItem('achadosEvo')) || [];
     items.push(newItem);
-
     localStorage.setItem('achadosEvo', JSON.stringify(items));
 
-    addItemToGallery(newItem);
+    addItemToGallery(newItem, items.length - 1);
     form.reset();
   };
   reader.readAsDataURL(file);
 });
 
-function addItemToGallery(item) {
+function addItemToGallery(item, index) {
   const card = document.createElement('div');
   card.classList.add('item-card');
   card.innerHTML = `
@@ -48,6 +47,22 @@ function addItemToGallery(item) {
     <p>${item.description}</p>
     <p><strong>Local:</strong> ${item.location}</p>
     <p><strong>Data:</strong> ${item.date}</p>
+    <button class="delete-btn">Remover</button>
   `;
+
+  const deleteBtn = card.querySelector('.delete-btn');
+  deleteBtn.addEventListener('click', () => {
+    if (confirm('Tem certeza que deseja remover este item?')) {
+      removeItem(index);
+      card.remove();
+    }
+  });
+
   gallery.appendChild(card);
+}
+
+function removeItem(index) {
+  const items = JSON.parse(localStorage.getItem('achadosEvo')) || [];
+  items.splice(index, 1);
+  localStorage.setItem('achadosEvo', JSON.stringify(items));
 }
