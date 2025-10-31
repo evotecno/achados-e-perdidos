@@ -1,68 +1,76 @@
-const form = document.getElementById('itemForm');
-const gallery = document.getElementById('itemsGallery');
+// Espera o DOM carregar antes de rodar o código
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("itemForm");
+  const gallery = document.getElementById("itemsGallery");
 
-// Carregar itens salvos no mural
-document.addEventListener('DOMContentLoaded', () => {
-  const items = JSON.parse(localStorage.getItem('achadosEvo')) || [];
-  gallery.innerHTML = '';
-  items.forEach((item, index) => addItemToGallery(item, index));
-});
+  // Carrega os itens salvos (caso tenha algum no localStorage)
+  let items = JSON.parse(localStorage.getItem("achadosEvoItems")) || [];
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
+  // Função para atualizar o mural
+  function atualizarMural() {
+    gallery.innerHTML = "";
+    items.forEach((item, index) => {
+      const card = document.createElement("div");
+      card.classList.add("item-card");
 
-  const name = document.getElementById('itemName').value.trim();
-  const description = document.getElementById('itemDescription').value.trim();
-  const location = document.getElementById('itemLocation').value.trim();
-  const date = document.getElementById('itemDate').value;
-  const imageInput = document.getElementById('itemImage');
-  const file = imageInput.files[0];
+      card.innerHTML = `
+        <img src="${item.imagem}" alt="Item" />
+        <h3>${item.nome}</h3>
+        <p><strong>Descrição:</strong> ${item.descricao}</p>
+        <p><strong>Local:</strong> ${item.local}</p>
+        <p><strong>Data:</strong> ${item.data}</p>
+        <button class="delete-btn" data-index="${index}">🗑️ Apagar</button>
+      `;
 
-  if (!file) {
-    alert('Por favor, selecione uma imagem.');
-    return;
+      gallery.appendChild(card);
+    });
+
+    // Função de apagar item
+    const botoesExcluir = document.querySelectorAll(".delete-btn");
+    botoesExcluir.forEach(botao => {
+      botao.addEventListener("click", (e) => {
+        const i = e.target.getAttribute("data-index");
+        items.splice(i, 1);
+        localStorage.setItem("achadosEvoItems", JSON.stringify(items));
+        atualizarMural();
+      });
+    });
   }
 
-  const reader = new FileReader();
-  reader.onload = () => {
-    const imageUrl = reader.result;
-    const newItem = { name, description, location, date, imageUrl };
+  // Ao enviar o formulário
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-    const items = JSON.parse(localStorage.getItem('achadosEvo')) || [];
-    items.push(newItem);
-    localStorage.setItem('achadosEvo', JSON.stringify(items));
+    const nome = document.getElementById("itemName").value;
+    const descricao = document.getElementById("itemDescription").value;
+    const local = document.getElementById("itemLocation").value;
+    const data = document.getElementById("itemDate").value;
+    const imagemInput = document.getElementById("itemImage");
 
-    addItemToGallery(newItem, items.length - 1);
-    form.reset();
-  };
-  reader.readAsDataURL(file);
-});
-
-function addItemToGallery(item, index) {
-  const card = document.createElement('div');
-  card.classList.add('item-card');
-  card.innerHTML = `
-    <img src="${item.imageUrl}" alt="${item.name}" />
-    <h3>${item.name}</h3>
-    <p>${item.description}</p>
-    <p><strong>Local:</strong> ${item.location}</p>
-    <p><strong>Data:</strong> ${item.date}</p>
-    <button class="delete-btn">Remover</button>
-  `;
-
-  const deleteBtn = card.querySelector('.delete-btn');
-  deleteBtn.addEventListener('click', () => {
-    if (confirm('Tem certeza que deseja remover este item?')) {
-      removeItem(index);
-      card.remove();
+    if (!imagemInput.files.length) {
+      alert("Por favor, selecione uma imagem.");
+      return;
     }
+
+    const leitor = new FileReader();
+    leitor.onload = function(evento) {
+      const novoItem = {
+        nome,
+        descricao,
+        local,
+        data,
+        imagem: evento.target.result
+      };
+
+      items.push(novoItem);
+      localStorage.setItem("achadosEvoItems", JSON.stringify(items));
+      atualizarMural();
+      form.reset();
+    };
+
+    leitor.readAsDataURL(imagemInput.files[0]);
   });
 
-  gallery.appendChild(card);
-}
-
-function removeItem(index) {
-  const items = JSON.parse(localStorage.getItem('achadosEvo')) || [];
-  items.splice(index, 1);
-  localStorage.setItem('achadosEvo', JSON.stringify(items));
-}
+  // Atualiza mural ao carregar
+  atualizarMural();
+});
